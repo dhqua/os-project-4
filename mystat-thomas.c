@@ -4,6 +4,8 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <sys/sysmacros.h>
+
 
 int main(int argc, char* argv[])
 {
@@ -21,6 +23,11 @@ int main(int argc, char* argv[])
     printf("Link Count: %d\n" , (int)statBuffer.st_nlink );
     printf("File Permissions: %lo\n", (unsigned long)statBuffer.st_mode);
     printf( "File Permissions: ");
+
+
+    //Ternaray test
+    printf("Ternary test ");
+    printf(( S_IXUSR && (unsigned long)statBuffer.st_mode ) ? "It was true!\n" : "It was false\n");
     // User read
     if (statBuffer.st_mode && S_IRUSR)
         printf("r");
@@ -34,9 +41,13 @@ int main(int argc, char* argv[])
         printf("-");
     // User execute
     if ( (statBuffer.st_mode && S_IXUSR ))
+    {
         printf("x");
+    }
     else
+    {
         printf("-");
+    }
     // Group read
     if (statBuffer.st_mode && S_IRGRP)
         printf("r");
@@ -48,7 +59,7 @@ int main(int argc, char* argv[])
     else
         printf("-");
     // Group execute 
-    if (statBuffer.st_mode && S_IXGRP)
+    if ((statBuffer.st_mode && S_IXGRP))
         printf("x");
     else
         printf("-");
@@ -64,7 +75,7 @@ int main(int argc, char* argv[])
     else
         printf("-");
     // Other execute
-    if (statBuffer.st_mode && S_IXOTH)
+    if ((statBuffer.st_mode && S_IXOTH))
         printf("x");
     else
         printf("-");
