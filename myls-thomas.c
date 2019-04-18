@@ -7,8 +7,14 @@
 #include <sys/types.h>
 #include <dirent.h>
 #include <unistd.h>
+#include <fcntl.h>
+#include <string.h>
+
 #define TRUE 1
 #define FALSE 0
+
+
+void printPerms (struct stat * temp);
 
 int main (int argc , char* argv[])
 {
@@ -19,6 +25,8 @@ int main (int argc , char* argv[])
     char * cwd = malloc(sizeof(char *) * PATH_MAX);
     int hasLFlag = FALSE;
     int hasDirName = FALSE;
+    // Stuct used to convert system time to readable tome
+    struct tm local;
 
     // Handle command line arguments
     if(argc > 1 && strcmp(argv[1], "-l") == 0 )
@@ -44,13 +52,85 @@ int main (int argc , char* argv[])
         getcwd(cwd, PATH_MAX);
     }
 
-    //test = opendir("/home/t/thomasq/os_cop4600/project4/os-project-4");
     openedDir = opendir(cwd);
     workingDir = readdir(openedDir);
+
+    struct stat fileStat;
     while (workingDir != NULL)
     {
+        if(hasLFlag)
+        {
+            stat(workingDir->d_name, &fileStat);
+            printPerms(&fileStat);
+            printf(" %d ", (int)fileStat.st_nlink);
+            printf("%d ", fileStat.st_uid);
+            printf("%d ", fileStat.st_gid);
+            printf("%6d ", fileStat.st_size);
+            char * accessDate = ctime(&fileStat.st_mtime);
+            int size = strlen(accessDate) - 1;
+            accessDate[size] = '\0';
+            printf("%s ", accessDate);
+
+        }
+
         printf("%s\n",workingDir->d_name);
         workingDir = readdir(openedDir);
     }
     return 0;
+}
+
+void printPerms (struct stat * temp)
+{
+
+            // User read
+            if (temp->st_mode & S_IRUSR)
+                printf("r");
+            else
+                printf("-");
+
+            // User write
+            if (temp->st_mode & S_IWUSR)
+                printf("w");
+            else
+                printf("-");
+            // User execute
+            if ( (temp->st_mode & S_IXUSR ))
+            {
+                printf("x");
+            }
+            else
+            {
+                printf("-");
+            }
+            // Group read
+            if (temp->st_mode & S_IRGRP)
+                printf("r");
+            else
+                printf("-");
+            // Group write
+            if (temp->st_mode & S_IWGRP)
+                printf("w");
+            else
+                printf("-");
+            // Group execute 
+            if ((temp->st_mode & S_IXGRP))
+                printf("x");
+            else
+                printf("-");
+
+            // Other read
+            if (temp->st_mode & S_IROTH)
+                printf("r");
+            else
+                printf("-");
+            // Other write
+            if (temp->st_mode & S_IWOTH)
+                printf("w");
+            else
+                printf("-");
+            // Other execute
+            if ((temp->st_mode & S_IXOTH))
+                printf("x");
+            else
+                printf("-");
 }

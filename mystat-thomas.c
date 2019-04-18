@@ -21,26 +21,21 @@ int main(int argc, char* argv[])
     printf("File Size: %d\n" , (int)statBuffer.st_size );
     printf("# of Blocks: %d\n" , (int)statBuffer.st_blocks );
     printf("Link Count: %d\n" , (int)statBuffer.st_nlink );
-    printf("File Permissions: %lo\n", (unsigned long)statBuffer.st_mode);
     printf( "File Permissions: ");
 
-
-    //Ternaray test
-    printf("Ternary test ");
-    printf(( S_IXUSR && (unsigned long)statBuffer.st_mode ) ? "It was true!\n" : "It was false\n");
     // User read
-    if (statBuffer.st_mode && S_IRUSR)
+    if (statBuffer.st_mode & S_IRUSR)
         printf("r");
     else
         printf("-");
 
     // User write
-    if (statBuffer.st_mode && S_IWUSR)
+    if (statBuffer.st_mode & S_IWUSR)
         printf("w");
     else
         printf("-");
     // User execute
-    if ( (statBuffer.st_mode && S_IXUSR ))
+    if ( (statBuffer.st_mode & S_IXUSR ))
     {
         printf("x");
     }
@@ -49,33 +44,33 @@ int main(int argc, char* argv[])
         printf("-");
     }
     // Group read
-    if (statBuffer.st_mode && S_IRGRP)
+    if (statBuffer.st_mode & S_IRGRP)
         printf("r");
     else
         printf("-");
     // Group write
-    if (statBuffer.st_mode && S_IWGRP)
+    if (statBuffer.st_mode & S_IWGRP)
         printf("w");
     else
         printf("-");
     // Group execute 
-    if ((statBuffer.st_mode && S_IXGRP))
+    if ((statBuffer.st_mode & S_IXGRP))
         printf("x");
     else
         printf("-");
 
     // Other read
-    if (statBuffer.st_mode && S_IROTH)
+    if (statBuffer.st_mode & S_IROTH)
         printf("r");
     else
         printf("-");
     // Other write
-    if (statBuffer.st_mode && S_IWOTH)
+    if (statBuffer.st_mode & S_IWOTH)
         printf("w");
     else
         printf("-");
     // Other execute
-    if ((statBuffer.st_mode && S_IXOTH))
+    if ((statBuffer.st_mode & S_IXOTH))
         printf("x");
     else
         printf("-");
