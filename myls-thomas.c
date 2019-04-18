@@ -58,6 +58,12 @@ int main (int argc , char* argv[])
     struct stat fileStat;
     while (workingDir != NULL)
     {
+        if(workingDir->d_name[0] == '.')
+        {
+            workingDir = readdir(openedDir);
+            continue;
+        }
+
         if(hasLFlag)
         {
             stat(workingDir->d_name, &fileStat);
@@ -81,6 +87,14 @@ int main (int argc , char* argv[])
 
 void printPerms (struct stat * temp)
 {
+
+            //directory or link
+            if( (temp->st_mode & S_IFMT) == S_IFDIR)
+                printf("d");
+            else if ( (temp->st_mode & S_IFMT) == S_IFLNK)
+                printf("l");
+            else
+                printf("-");
 
             // User read
             if (temp->st_mode & S_IRUSR)
