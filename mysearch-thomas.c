@@ -59,8 +59,9 @@ int main (int argc , char* argv[])
 void printDirs(char * currDir)
 {
     DIR * tempOpen = opendir(currDir);
+    if(tempOpen == NULL)
+        return;
     struct dirent * tempWorkDir = readdir(tempOpen);
-
 
     struct stat fileStat;
     while (tempWorkDir != NULL)
@@ -75,10 +76,12 @@ void printDirs(char * currDir)
         
         stat(tempWorkDir->d_name, &fileStat);
         //If it is a directory, call the functon recursively
-        if( (fileStat.st_mode & S_IFMT) == S_IFDIR)
-        {
+        // int tempFile = opendir(tempWorkDir->d_name, O_RDONLY);
+        // if( tempFile )
+        // {
+            // struct dirent * newDir = read
             printDirs(tempWorkDir->d_name);
-        }
+        // }
 
         tempWorkDir = readdir(tempOpen);
     }
