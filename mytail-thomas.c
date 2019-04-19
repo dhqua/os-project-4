@@ -15,11 +15,10 @@ int main(int argc, char * argv[])
     }
 
     char * num = argv[1];
+    // Gets rid of the '-'
     num = num + 1;
 
     char * fileName = argv[2];
-
-
     struct stat statBuffer;
     stat(fileName, &statBuffer);
 
@@ -27,41 +26,50 @@ int main(int argc, char * argv[])
     
 
     int fileOpen = open(fileName, O_RDONLY);
-    lseek(fileOpen, 1, SEEK_END);
+    lseek(fileOpen, -1, SEEK_END);
 
     int lineCount = 0;
     int count = 0;
     char buffer[1];
-    
-    while(lineCount < atoi(num) )
+    off_t resultOffset;
+
+    while(read(fileOpen, buffer, 1) )
     {
-        read(fileOpen, buffer, 1);
         count++;
         if(*buffer == '\n')
             lineCount++;
         // subtract 2 so that the read goes backwards
         // An incremenet of 1 is builts into read
-        lseek(fileOpen, -2, SEEK_CUR);
 
-    }
+        resultOffset = lseek(fileOpen, -2, SEEK_CUR);
 
-    if(atoi(num) > fileSize)
-    {
-        char * maxResult[fileSize];
-        read(fileOpen, maxResult, fileSize);
-        printf("%s\n", maxResult);
-        return 0;
+        if(lineCount == atoi(num))
+            break;
     }
 
 
-    char * result = malloc(sizeof(char *) * count);
-    lseek(fileOpen, 1, SEEK_CUR);
+    // if(atoi(num) >= lineCount)
+    // {
+    //     char * maxResult[fileSize * 2];
+    //     // lseek(fileOpen, 1, SEEK_CUR);
+    //     lseek(fileOpen, resultOffset + 1, SEEK_SET);
+    //     read(fileOpen, maxResult, fileSize + 2);
+    //     close(fileOpen);
+    //     printf("%s\n", maxResult);
+    //     return 0;
+    // }
+
+
+    char * result = malloc(sizeof(char) * count * 2);
+    // lseek(fileOpen, 1, SEEK_CUR);
     read(fileOpen, result, count);
+
     // Trim newlines at the top of file
     while(*result == '\n')
     {
         result++;
     }
+
     printf("%s\n", result);
 
     close(fileOpen);
