@@ -13,7 +13,7 @@
 #define TRUE 1
 #define FALSE 0
 
-void printDirs(char * currDir);
+void printDirs(char * currDir, char * prefix);
 
 int main (int argc , char* argv[])
 {
@@ -51,12 +51,12 @@ int main (int argc , char* argv[])
     //     printf("%s\n",workingDir->d_name);
     //     workingDir = readdir(openedDir);
     // }
-    printDirs(cwd);
+    printDirs(cwd, "");
 
     return 0;
 }
 
-void printDirs(char * currDir)
+void printDirs(char * currDir, char * prefix)
 {
     DIR * tempOpen = opendir(currDir);
     if(tempOpen == NULL)
@@ -73,14 +73,20 @@ void printDirs(char * currDir)
         }
 
         printf("%s\n",tempWorkDir->d_name);
-        
-        stat(tempWorkDir->d_name, &fileStat);
+        char * tempPath = malloc(sizeof(char) * (strlen(currDir) + strlen(prefix) + 2));
+        strcat(tempPath,currDir);
+        strcat(tempPath,"/");
+        strcat(tempPath,tempWorkDir->d_name);
+
+        //printf("RESULT PATH: %s\n", tempPath);
+
+        stat(tempPath, &fileStat);
         //If it is a directory, call the functon recursively
         // int tempFile = opendir(tempWorkDir->d_name, O_RDONLY);
         // if( tempFile )
         // {
             // struct dirent * newDir = read
-            printDirs(tempWorkDir->d_name);
+            printDirs(tempPath, "");
         // }
 
         tempWorkDir = readdir(tempOpen);
