@@ -23,6 +23,16 @@ int main(int argc, char* argv[])
     printf("Link Count: %d\n" , (int)statBuffer.st_nlink );
     printf( "File Permissions: ");
 
+
+
+    //directory or link
+    if( (statBuffer.st_mode & S_IFMT) == S_IFDIR)
+        printf("d");
+    else if ( (statBuffer.st_mode & S_IFMT) == S_IFLNK)
+        printf("l");
+    else
+        printf("-");
+
     // User read
     if (statBuffer.st_mode & S_IRUSR)
         printf("r");
