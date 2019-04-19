@@ -88,9 +88,9 @@ void printDirs(char * currDir, char * prefix)
             // struct dirent * newDir = read
             printDirs(tempPath, "");
         // }
-
         tempWorkDir = readdir(tempOpen);
     }
 
+    // free(tempPath);
     return;
 }
