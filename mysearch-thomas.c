@@ -72,14 +72,15 @@ void printDirs(char * currDir)
         }
 
         printf("%s\n",tempWorkDir->d_name);
-        tempWorkDir = readdir(tempOpen);
-
+        
         stat(tempWorkDir->d_name, &fileStat);
         //If it is a directory, call the functon recursively
         if( (fileStat.st_mode & S_IFMT) == S_IFDIR)
         {
             printDirs(tempWorkDir->d_name);
         }
+
+        tempWorkDir = readdir(tempOpen);
     }
 
     return;
