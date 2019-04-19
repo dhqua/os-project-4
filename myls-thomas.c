@@ -14,12 +14,13 @@
 #define FALSE 0
 
 
+//Prototype: functon prints the file permissions
+// temp - path to the file to check
 void printPerms (struct stat * temp);
 
 int main (int argc , char* argv[])
 {
-    //if (arc )
-
+    //Variable declarations
     DIR * openedDir;
     struct dirent * workingDir;
     char * cwd = malloc(sizeof(char *) * PATH_MAX);
@@ -29,11 +30,13 @@ int main (int argc , char* argv[])
     struct tm local;
 
     // Handle command line arguments
+    // checks for -l flag
     if(argc > 1 && strcmp(argv[1], "-l") == 0 )
     {
         hasLFlag = TRUE;
     }
 
+    // Checks if user provides a path to a file and flips the flag
     if(hasLFlag && argc > 2 && (argv[2] != NULL) )
     {
         cwd = argv[2];
@@ -47,23 +50,30 @@ int main (int argc , char* argv[])
     }
 
     // Stores current working directory in cwd string
+    //Defuaults to current work directory if no args passes
     if(!hasDirName)
     {
         getcwd(cwd, PATH_MAX);
     }
 
+    // opens the directory
     openedDir = opendir(cwd);
+    //Reads the entries of the directory
     workingDir = readdir(openedDir);
 
     struct stat fileStat;
+    // Loops until the end of the directory
     while (workingDir != NULL)
     {
+        // Skips the . and .. that are present in every directory
         if(workingDir->d_name[0] == '.')
         {
             workingDir = readdir(openedDir);
             continue;
         }
 
+        // if he user provided -l flag print more info about the file
+        // Extra info is stored in fileStart struct that was declared above
         if(hasLFlag)
         {
             stat(workingDir->d_name, &fileStat);
@@ -79,12 +89,15 @@ int main (int argc , char* argv[])
 
         }
 
+        // Print file name and move to next entry in the directory 
         printf("%s\n",workingDir->d_name);
         workingDir = readdir(openedDir);
     }
     return 0;
 }
 
+//Prints the permissions of a file
+// temp - file struct that was filled by a call to stat()
 void printPerms (struct stat * temp)
 {
 
