@@ -9,21 +9,28 @@
 
 int main(int argc, char* argv[])
 {
+    // Check command line args
+    // Correct Usage: ./mystat fileName
     if(argc != 2)
     {
         printf("Error, program on takes 1 argument, the path to the file!\n" );
         return 1;
     }
 
+    // Call stat interface to get more info on a file
     struct stat statBuffer;
     stat(argv[1], &statBuffer);
 
+    //Print necessary info,saved in statBuffer by call to stat=()
     printf("File Size: %d\n" , (int)statBuffer.st_size );
     printf("# of Blocks: %d\n" , (int)statBuffer.st_blocks );
     printf("Link Count: %d\n" , (int)statBuffer.st_nlink );
     printf( "File Permissions: ");
 
 
+    //---------------------------
+    // Print file permissions
+    //---------------------------
 
     //directory or link
     if( (statBuffer.st_mode & S_IFMT) == S_IFDIR)
