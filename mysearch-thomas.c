@@ -36,21 +36,6 @@ int main (int argc , char* argv[])
         getcwd(cwd, PATH_MAX);
     }
 
-    // openedDir = opendir(cwd);
-    // workingDir = readdir(openedDir);
-
-    // struct stat fileStat;
-    // while (workingDir != NULL)
-    // {
-    //     if(workingDir->d_name[0] == '.')
-    //     {
-    //         workingDir = readdir(openedDir);
-    //         continue;
-    //     }
-
-    //     printf("%s\n",workingDir->d_name);
-    //     workingDir = readdir(openedDir);
-    // }
     printDirs(cwd, "");
 
     return 0;
@@ -73,24 +58,23 @@ void printDirs(char * currDir, char * prefix)
         }
 
         printf("%s\n",tempWorkDir->d_name);
-        char * tempPath = malloc(sizeof(char) * (strlen(currDir) + strlen(prefix) + 2));
+        int maxSize = 500;
+        char * tempPath = (char *)malloc((size_t)maxSize);
+        // char * tempPath = (char *) malloc(sizeof(char) * (strlen(currDir) + strlen(prefix) + 2));
         strcat(tempPath,currDir);
         strcat(tempPath,"/");
         strcat(tempPath,tempWorkDir->d_name);
 
-        //printf("RESULT PATH: %s\n", tempPath);
 
         stat(tempPath, &fileStat);
-        //If it is a directory, call the functon recursively
-        // int tempFile = opendir(tempWorkDir->d_name, O_RDONLY);
-        // if( tempFile )
-        // {
-            // struct dirent * newDir = read
+       
+        if(tempWorkDir->d_type == DT_DIR)
+        {
             printDirs(tempPath, "");
-        // }
+        }
+
         tempWorkDir = readdir(tempOpen);
     }
 
-    // free(tempPath);
     return;
 }
